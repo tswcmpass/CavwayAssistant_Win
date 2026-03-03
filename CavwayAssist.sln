@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CavwayAssist", "CavwayAssist\CavwayAssist.csproj", "{72914F92-E1FC-4139-9A87-5E42B9CF3850}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{72914F92-E1FC-4139-9A87-5E42B9CF3850}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72914F92-E1FC-4139-9A87-5E42B9CF3850}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72914F92-E1FC-4139-9A87-5E42B9CF3850}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72914F92-E1FC-4139-9A87-5E42B9CF3850}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
