@@ -42,11 +42,11 @@
             this.btnLaserON = new System.Windows.Forms.Button();
             this.grpHistoryData = new System.Windows.Forms.GroupBox();
             this.btnExportData = new System.Windows.Forms.Button();
-            this.listData = new CavwayAssist.DoubleBufferListView();
             this.btnDownloadData = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.txtnumshot = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.listData = new CavwayAssist.DoubleBufferListView();
             this.groupBox1.SuspendLayout();
             this.grpCMD.SuspendLayout();
             this.grpHistoryData.SuspendLayout();
@@ -58,7 +58,7 @@
             this.btnConnect.Location = new System.Drawing.Point(16, 23);
             this.btnConnect.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(94, 25);
+            this.btnConnect.Size = new System.Drawing.Size(120, 30);
             this.btnConnect.TabIndex = 0;
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = true;
@@ -73,7 +73,7 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox1.Size = new System.Drawing.Size(131, 113);
+            this.groupBox1.Size = new System.Drawing.Size(160, 113);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Device";
@@ -84,7 +84,7 @@
             this.lblSerial.Font = new System.Drawing.Font("Arial Narrow", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSerial.Location = new System.Drawing.Point(13, 86);
             this.lblSerial.Name = "lblSerial";
-            this.lblSerial.Size = new System.Drawing.Size(39, 17);
+            this.lblSerial.Size = new System.Drawing.Size(55, 24);
             this.lblSerial.TabIndex = 3;
             this.lblSerial.Text = "Serial.";
             // 
@@ -96,7 +96,7 @@
             this.lblPortStatus.Location = new System.Drawing.Point(26, 60);
             this.lblPortStatus.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblPortStatus.Name = "lblPortStatus";
-            this.lblPortStatus.Size = new System.Drawing.Size(74, 17);
+            this.lblPortStatus.Size = new System.Drawing.Size(108, 24);
             this.lblPortStatus.TabIndex = 2;
             this.lblPortStatus.Text = "Disconnected";
             // 
@@ -108,9 +108,9 @@
             this.grpCMD.Controls.Add(this.btnMeas);
             this.grpCMD.Controls.Add(this.btnLaserOff);
             this.grpCMD.Controls.Add(this.btnLaserON);
-            this.grpCMD.Location = new System.Drawing.Point(10, 130);
+            this.grpCMD.Location = new System.Drawing.Point(10, 127);
             this.grpCMD.Name = "grpCMD";
-            this.grpCMD.Size = new System.Drawing.Size(131, 279);
+            this.grpCMD.Size = new System.Drawing.Size(160, 281);
             this.grpCMD.TabIndex = 2;
             this.grpCMD.TabStop = false;
             this.grpCMD.Text = "Commands";
@@ -121,7 +121,7 @@
             this.btnFirmware.Location = new System.Drawing.Point(16, 186);
             this.btnFirmware.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnFirmware.Name = "btnFirmware";
-            this.btnFirmware.Size = new System.Drawing.Size(94, 25);
+            this.btnFirmware.Size = new System.Drawing.Size(120, 30);
             this.btnFirmware.TabIndex = 5;
             this.btnFirmware.Text = "Firmware";
             this.btnFirmware.UseVisualStyleBackColor = true;
@@ -133,7 +133,7 @@
             this.btnCali.Location = new System.Drawing.Point(16, 153);
             this.btnCali.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnCali.Name = "btnCali";
-            this.btnCali.Size = new System.Drawing.Size(94, 25);
+            this.btnCali.Size = new System.Drawing.Size(120, 30);
             this.btnCali.TabIndex = 3;
             this.btnCali.Text = "Calibration";
             this.btnCali.UseVisualStyleBackColor = true;
@@ -145,7 +145,7 @@
             this.btnSyncTime.Location = new System.Drawing.Point(16, 122);
             this.btnSyncTime.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnSyncTime.Name = "btnSyncTime";
-            this.btnSyncTime.Size = new System.Drawing.Size(94, 25);
+            this.btnSyncTime.Size = new System.Drawing.Size(120, 30);
             this.btnSyncTime.TabIndex = 8;
             this.btnSyncTime.Text = "Sync Time";
             this.btnSyncTime.UseVisualStyleBackColor = true;
@@ -157,7 +157,7 @@
             this.btnMeas.Location = new System.Drawing.Point(16, 91);
             this.btnMeas.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnMeas.Name = "btnMeas";
-            this.btnMeas.Size = new System.Drawing.Size(94, 25);
+            this.btnMeas.Size = new System.Drawing.Size(120, 30);
             this.btnMeas.TabIndex = 5;
             this.btnMeas.Text = "Measure";
             this.btnMeas.UseVisualStyleBackColor = true;
@@ -169,7 +169,7 @@
             this.btnLaserOff.Location = new System.Drawing.Point(16, 60);
             this.btnLaserOff.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnLaserOff.Name = "btnLaserOff";
-            this.btnLaserOff.Size = new System.Drawing.Size(94, 25);
+            this.btnLaserOff.Size = new System.Drawing.Size(120, 30);
             this.btnLaserOff.TabIndex = 4;
             this.btnLaserOff.Text = "Laser OFF";
             this.btnLaserOff.UseVisualStyleBackColor = true;
@@ -181,7 +181,7 @@
             this.btnLaserON.Location = new System.Drawing.Point(16, 29);
             this.btnLaserON.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnLaserON.Name = "btnLaserON";
-            this.btnLaserON.Size = new System.Drawing.Size(94, 25);
+            this.btnLaserON.Size = new System.Drawing.Size(120, 30);
             this.btnLaserON.TabIndex = 3;
             this.btnLaserON.Text = "Laser ON";
             this.btnLaserON.UseVisualStyleBackColor = true;
@@ -195,7 +195,7 @@
             this.grpHistoryData.Controls.Add(this.label2);
             this.grpHistoryData.Controls.Add(this.txtnumshot);
             this.grpHistoryData.Controls.Add(this.label1);
-            this.grpHistoryData.Location = new System.Drawing.Point(147, 12);
+            this.grpHistoryData.Location = new System.Drawing.Point(178, 11);
             this.grpHistoryData.Name = "grpHistoryData";
             this.grpHistoryData.Size = new System.Drawing.Size(905, 397);
             this.grpHistoryData.TabIndex = 4;
@@ -208,20 +208,11 @@
             this.btnExportData.Location = new System.Drawing.Point(427, 23);
             this.btnExportData.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnExportData.Name = "btnExportData";
-            this.btnExportData.Size = new System.Drawing.Size(130, 25);
+            this.btnExportData.Size = new System.Drawing.Size(130, 30);
             this.btnExportData.TabIndex = 7;
             this.btnExportData.Text = "Export data";
             this.btnExportData.UseVisualStyleBackColor = true;
             this.btnExportData.Click += new System.EventHandler(this.btnExportData_Click);
-            // 
-            // listData
-            // 
-            this.listData.FullRowSelect = true;
-            this.listData.Location = new System.Drawing.Point(6, 59);
-            this.listData.Name = "listData";
-            this.listData.Size = new System.Drawing.Size(886, 322);
-            this.listData.TabIndex = 6;
-            this.listData.UseCompatibleStateImageBehavior = false;
             // 
             // btnDownloadData
             // 
@@ -229,7 +220,7 @@
             this.btnDownloadData.Location = new System.Drawing.Point(279, 23);
             this.btnDownloadData.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnDownloadData.Name = "btnDownloadData";
-            this.btnDownloadData.Size = new System.Drawing.Size(130, 25);
+            this.btnDownloadData.Size = new System.Drawing.Size(130, 30);
             this.btnDownloadData.TabIndex = 5;
             this.btnDownloadData.Text = "Download data";
             this.btnDownloadData.UseVisualStyleBackColor = true;
@@ -240,7 +231,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(224, 29);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(29, 15);
+            this.label2.Size = new System.Drawing.Size(41, 20);
             this.label2.TabIndex = 5;
             this.label2.Text = "shots";
             // 
@@ -248,7 +239,7 @@
             // 
             this.txtnumshot.Location = new System.Drawing.Point(132, 26);
             this.txtnumshot.Name = "txtnumshot";
-            this.txtnumshot.Size = new System.Drawing.Size(77, 20);
+            this.txtnumshot.Size = new System.Drawing.Size(77, 26);
             this.txtnumshot.TabIndex = 1;
             this.txtnumshot.Text = "1";
             // 
@@ -257,15 +248,24 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(16, 29);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 15);
+            this.label1.Size = new System.Drawing.Size(110, 20);
             this.label1.TabIndex = 0;
             this.label1.Text = "Download lastest";
             // 
+            // listData
+            // 
+            this.listData.FullRowSelect = true;
+            this.listData.Location = new System.Drawing.Point(6, 59);
+            this.listData.Name = "listData";
+            this.listData.Size = new System.Drawing.Size(886, 322);
+            this.listData.TabIndex = 6;
+            this.listData.UseCompatibleStateImageBehavior = false;
+            // 
             // FrmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(5F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1064, 421);
+            this.ClientSize = new System.Drawing.Size(1091, 415);
             this.Controls.Add(this.grpHistoryData);
             this.Controls.Add(this.grpCMD);
             this.Controls.Add(this.groupBox1);
@@ -275,7 +275,7 @@
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.MaximizeBox = false;
             this.Name = "FrmMain";
-            this.Text = "Cavway Assistant V1.2 (Jan. 21st, 2026)";
+            this.Text = "Cavway Assistant V1.2.1 (May 8th, 2026)";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             this.Load += new System.EventHandler(this.FrmMain_Load);
             this.groupBox1.ResumeLayout(false);

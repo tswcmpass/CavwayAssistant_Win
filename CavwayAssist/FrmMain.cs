@@ -16,6 +16,7 @@ namespace CavwayAssist
     public partial class FrmMain : Form
     {
         List<Shot> listshot = new List<Shot>();
+        private volatile bool userConnected = false;
         
 
         public FrmMain()
@@ -38,7 +39,7 @@ namespace CavwayAssist
             {
                 if (UART.connect())
                 {
-                    
+                    userConnected = true;
                     lblPortStatus.Text = "Connected";
                     lblPortStatus.ForeColor = Color.Green;
                     btnConnect.Text = "Disconnect";
@@ -53,6 +54,7 @@ namespace CavwayAssist
             else
             {
                 UART.Disconnect();
+                userConnected = false;
                 lblPortStatus.Text = "Disconnected";
                 lblPortStatus.ForeColor = Color.Red;
                 btnConnect.Text = "Connect";
@@ -169,8 +171,9 @@ namespace CavwayAssist
         {
             while(ThreadRunning == 1)
             {
-                if(!UART.isConnected())
+                if (userConnected && !UART.isConnected())
                 {
+                    userConnected = false;
                     this.BeginInvoke((EventHandler)(delegate
                     {
                         lblPortStatus.Text = "Disconnected";

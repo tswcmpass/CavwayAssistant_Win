@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
+using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -96,111 +97,100 @@ namespace CavwayAssist
 
         public static List<PORT_INFO> list_ports()
         {
-            Guid GUID_DEVCLASS_PORTS = new Guid("4d36e978-e325-11ce-bfc1-08002be10318");
-            Guid GUID_DEVCLASS_MODEM = new Guid("4d36e96d-e325-11ce-bfc1-08002be10318");
-            Guid GUID_DEVINTERFACE_COMPORT = new Guid("86E0D1E0-8089-11D0-9CE4-08003E301F73");
-            Guid GUID_DEVINTERFACE_MODEM = new Guid("2c7089aa-2e0e-11d1-b114-00c04fc2aae4");
             List<PORT_INFO> ports = new List<PORT_INFO>();
-            Guid[] ClassGuid = new Guid[4];
-            ClassGuid[0] = GUID_DEVCLASS_PORTS;
-            ClassGuid[1] = GUID_DEVCLASS_MODEM;
-            ClassGuid[2] = GUID_DEVINTERFACE_COMPORT;
-            ClassGuid[3] = GUID_DEVINTERFACE_MODEM;
-            uint[] dwFlag = new uint[4];
-            dwFlag[0] = DIGCF_PRESENT;
-            dwFlag[1] = DIGCF_PRESENT;
-            dwFlag[2] = DIGCF_PRESENT | DIGCF_DEVICEINTERFACE;
-            dwFlag[3] = DIGCF_PRESENT | DIGCF_DEVICEINTERFACE;
-            List<string> temp_portname_list = new List<string>();//用于判断是否有重复的
-            for (int index = 0; index < ClassGuid.Length; index++)
+            try
             {
-                IntPtr hDevInfo = (IntPtr)INVALID_HANDLE_VALUE;
-                //函数返回一个包含本机上所有被请求的设备信息的设备信息集句柄
-                hDevInfo = SetupDiGetClassDevs(ref ClassGuid[index], 0, IntPtr.Zero, dwFlag[index]);
-                if (hDevInfo == (IntPtr)INVALID_HANDLE_VALUE)
+                string[] queries = new string[]
                 {
-                    return ports;
-                }
-                SP_DEVINFO_DATA DeviceInfoData = new SP_DEVINFO_DATA();
-                DeviceInfoData.cbSize = (uint)Marshal.SizeOf(new SP_DEVINFO_DATA());
-                //在64位系统上cbSize 是32 32位系统上是28，如果不对则会读取出错
-                DeviceInfoData.DevInst = 0;
-                DeviceInfoData.ClassGuid = Guid.Empty;
-                DeviceInfoData.Reserved = IntPtr.Zero;
-                //枚举设备信息
-                uint i = 0;
-                while (SetupDiEnumDeviceInfo(hDevInfo, i++, ref DeviceInfoData))
+                    "SELECT * FROM Win32_SerialPort",
+                    "SELECT * FROM Win32_PnPEntity WHERE Name LIKE '%(COM%'"
+                };
+
+                foreach (string query in queries)
                 {
-                    //Get port name
-                    const uint DIREG_DEV = 0x00000001;
-                    const uint KEY_READ = 0x00020019;
-                    //打开枚举成功的设备注册表句柄hkey，并获取该设备对应的相关信息 DeviceInfoData
-                    IntPtr hkey = SetupDiOpenDevRegKey(
-                        hDevInfo,
-                        ref DeviceInfoData,
-                        DICS_FLAG_GLOBAL,
-                        0,
-                        DIREG_DEV,
-                        KEY_READ);
-                    //根据句柄 和关键词获取 portName
-                    string portName = GetStringValue(hkey, "PortName");
-                    //关闭注册表句柄
-                    RegCloseKey(hkey);
-                    if (portName.Length == 0 || portName.ToString().Contains("LPT")) continue;//并口跳过
-                    if (temp_portname_list.IndexOf(portName) >= 0) continue;//重复的跳过
-                    temp_portname_list.Add(portName);
-                    // Get port friendly name 从DeviceInfoData中获取DeviceName信息
-                    byte[] DeviceName = new byte[MAX_DEV_LEN];
-                    uint PropertyRegDataType = 0;
-                    if (!SetupDiGetDeviceRegistryPropertyW(hDevInfo, ref DeviceInfoData, SPDRP_FRIENDLYNAME,
-                        ref PropertyRegDataType, DeviceName, MAX_DEV_LEN, IntPtr.Zero))
+                    using (var searcher = new ManagementObjectSearcher(query))
                     {
-                        DeviceName = new byte[MAX_DEV_LEN];
+                        foreach (ManagementObject obj in searcher.Get())
+                        {
+                            string portName = GetPortName(obj);
+                            if (string.IsNullOrEmpty(portName) || portName.ToUpper().Contains("LPT"))
+                                continue;
+
+                            string description = obj["Description"]?.ToString();
+                            if (string.IsNullOrEmpty(description))
+                                description = obj["Caption"]?.ToString() ?? obj["Name"]?.ToString() ?? string.Empty;
+
+                            string hardwareId = GetHardwareId(obj);
+
+                            if (ports.Any(p => string.Equals(p.port_name, portName, StringComparison.OrdinalIgnoreCase)))
+                                continue;
+
+                            ports.Add(new PORT_INFO
+                            {
+                                port_name = portName,
+                                description = description,
+                                hardware_id = hardwareId
+                            });
+                        }
                     }
-                    // Get DeviceDsc 从DeviceInfoData中获取DeviceDsc信息
-                    byte[] DeviceDsc = new byte[MAX_DEV_LEN];
-                    if (!SetupDiGetDeviceRegistryPropertyW(hDevInfo, ref DeviceInfoData, SPDRP_DEVICEDESC,
-                        ref PropertyRegDataType, DeviceDsc, MAX_DEV_LEN, IntPtr.Zero))
-                    {
-                        DeviceDsc = new byte[MAX_DEV_LEN];
-                    }
-                    // Get hardware ID 从DeviceInfoData中获取 hardware ID 信息
-                    byte[] hardwareID = new byte[MAX_DEV_LEN];
-                    if (!SetupDiGetDeviceRegistryPropertyW(hDevInfo, ref DeviceInfoData, SPDRP_HARDWAREID,
-                        ref PropertyRegDataType, hardwareID, MAX_DEV_LEN, IntPtr.Zero))
-                    {
-                        hardwareID = new byte[MAX_DEV_LEN];
-                    }
-                    PORT_INFO temp_port;
-                    temp_port.port_name = portName.Split('\0').Length > 0 ? portName.Split('\0')[0] : "";
-                    var str_arry = Encoding.Unicode.GetString(DeviceDsc).Split('\0');
-                    temp_port.description = str_arry.Length > 0 ? str_arry[0] : "";
-                    str_arry = Encoding.Unicode.GetString(hardwareID).Split('\0');
-                    temp_port.hardware_id = str_arry.Length > 0 ? str_arry[0] : "";
-                    ports.Add(temp_port);
                 }
-                SetupDiDestroyDeviceInfoList(hDevInfo);//
+            }
+            catch
+            {
+                // WMI 查询失败时，不抛异常，返回空列表
             }
             return ports;
         }
 
-
-        public static string GetStringValue(IntPtr hkey, string valName)
+        private static string GetPortName(ManagementObject obj)
         {
-            int type = 0;
-            int datasize = 0;
-            int ret = RegQueryValueEx(hkey, valName, null, ref type, null, ref datasize);
-            if (ret == 0)
-                if (type == 1)
+            string deviceId = obj["DeviceID"]?.ToString();
+            if (!string.IsNullOrEmpty(deviceId) && deviceId.StartsWith("COM", StringComparison.OrdinalIgnoreCase))
+                return deviceId;
+
+            string name = obj["Name"]?.ToString();
+            if (!string.IsNullOrEmpty(name))
+            {
+                int start = name.LastIndexOf("(COM", StringComparison.OrdinalIgnoreCase);
+                if (start >= 0)
                 {
-                    byte[] blob = new byte[datasize];
-                    ret = RegQueryValueEx(hkey, valName, null, ref type, blob, ref datasize);
-                    UnicodeEncoding unicode = new UnicodeEncoding();
-                    return unicode.GetString(blob);
+                    int end = name.IndexOf(')', start);
+                    if (end > start)
+                        return name.Substring(start + 1, end - start - 1);
                 }
-            return null;
+            }
+
+            if (!string.IsNullOrEmpty(deviceId) && deviceId.ToUpperInvariant().Contains("COM"))
+            {
+                int idx = deviceId.ToUpperInvariant().IndexOf("COM");
+                if (idx >= 0)
+                {
+                    int end = deviceId.IndexOf('&', idx);
+                    if (end < 0) end = deviceId.Length;
+                    return deviceId.Substring(idx, end - idx);
+                }
+            }
+
+            return string.Empty;
         }
 
+        private static string GetHardwareId(ManagementObject obj)
+        {
+            object pnpIdObj = obj["PNPDeviceID"];
+            if (pnpIdObj != null)
+                return pnpIdObj.ToString();
+
+            object hardwareIdObj = obj["HardwareID"];
+            string[] hardwareIds = hardwareIdObj as string[];
+            if (hardwareIds != null && hardwareIds.Length > 0)
+                return string.Join(";", hardwareIds);
+
+            string hardwareId = hardwareIdObj as string;
+            if (!string.IsNullOrEmpty(hardwareId))
+                return hardwareId;
+
+            return string.Empty;
+        }
 
         /// <summary>
         /// 根据给定的PID VID 搜寻 对应的串口
@@ -211,12 +201,13 @@ namespace CavwayAssist
         public static string[] GetCOMFromPIDVID(int pid, int vid)
         {
             List<PORT_INFO> COM_ports = list_ports();
-            string pid_s = pid.ToString("X4");
-            string vid_s = vid.ToString("X4");
+            string vidToken = "VID_" + vid.ToString("X4");
+            string pidToken = "PID_" + pid.ToString("X4");
             ArrayList list = new ArrayList();
             foreach (var port in COM_ports)
             {
-                if (port.hardware_id.Contains(pid_s) && port.hardware_id.Contains(vid_s))
+                string hwid = port.hardware_id.ToUpperInvariant();
+                if (hwid.Contains(vidToken) && hwid.Contains(pidToken))
                 {
                     list.Add(port.port_name);
                 }
@@ -227,6 +218,31 @@ namespace CavwayAssist
         public static Boolean connect()
         {
             string[] strCOM = GetCOMFromPIDVID(0x55d3, 0x1a86);
+            if (strCOM.Length == 0)
+            {
+                string[] allPorts = SerialPort.GetPortNames();
+                if (allPorts.Length == 1)
+                {
+                    strCOM = allPorts;
+                }
+                else
+                {
+                    var ports = list_ports();
+                    foreach (var p in ports)
+                    {
+                        if (!string.IsNullOrEmpty(p.description) &&
+                            (p.description.IndexOf("CH343", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                             p.description.IndexOf("USB-SERIAL", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                             p.description.IndexOf("USB Serial", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                             p.description.IndexOf("USB 到 串口", StringComparison.OrdinalIgnoreCase) >= 0))
+                        {
+                            strCOM = new string[] { p.port_name };
+                            break;
+                        }
+                    }
+                }
+            }
+
             if (strCOM.Length == 0) return false;
             //port = new SerialPort();
             port.PortName = strCOM[0];
