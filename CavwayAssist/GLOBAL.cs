@@ -10,5 +10,6 @@ namespace CavwayAssist
     {
         public const double FV = 24000.0;
         public const double FM = 16384.0;
+        public static int DeviceSerial = 0;
     }
 }

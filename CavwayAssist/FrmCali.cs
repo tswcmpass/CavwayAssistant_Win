@@ -30,6 +30,7 @@ namespace CavwayAssist
         private float cali_err_stddev;
         private float cali_max_err;
         private float cali_dip;
+        private int serial = 0;
 
         private const int CALIINFO_FLAG = 0;
         private const int CALIINFO_VER = 1;
@@ -90,6 +91,8 @@ namespace CavwayAssist
             Array.Copy(coeffs, 64, sensor_coeffs, 0, 64);
             ParseCoeffs(sensor_coeffs, ref bG2, ref bM2, ref aG2, ref aM2);
             btnSaveCoeffs.Enabled = true;
+            GLOBAL.DeviceSerial = UART.readSerial();
+            serial = GLOBAL.DeviceSerial;
             ShowCeofff();
             MessageBox.Show("Download calibration coeffs successful!");
         }
@@ -104,6 +107,7 @@ namespace CavwayAssist
                 lblinfo.Text += "Error Stddev.:" + cali_err_stddev.ToString() + "\n";
                 lblinfo.Text += "Max Error:" + cali_max_err.ToString() + "\n";
                 lblinfo.Text += "Dip:" + cali_dip.ToString() + "\n";
+                if(serial != 0) lblinfo.Text += "Serial:" + serial.ToString() + "\n";
             }
             lblCoeff.Text = "Sensor1:\n";
             lblCoeff.Text += "bG1:  " + bG1.x.ToString("f4") + "  " + bG1.y.ToString("f4") + "  " + bG1.z.ToString("f4") + "\n";
@@ -263,6 +267,7 @@ namespace CavwayAssist
                 csv.Write(cali_err_stddev.ToString());
                 csv.Write(cali_max_err.ToString());
                 csv.Write(cali_dip.ToString());
+                csv.Write(serial.ToString());
             }
 
             MessageBox.Show("Write Cavway coeffs file successful");
@@ -316,7 +321,8 @@ namespace CavwayAssist
             split = coefflist[15].Split(',');
             aM2.z.x = double.Parse(split[0]); aM2.z.y = double.Parse(split[1]); aM2.z.z = double.Parse(split[2]);
 
-            if (coefflist.Count == 21)
+            serial = 0;
+            if (coefflist.Count >= 21)
             {
                 bIsHasCaliInfo = true;
                 DateTime.TryParse(coefflist[16], out cali_time);
@@ -324,6 +330,10 @@ namespace CavwayAssist
                 float.TryParse(coefflist[18], out cali_err_stddev);
                 float.TryParse(coefflist[19], out cali_max_err);
                 float.TryParse(coefflist[20], out cali_dip);
+                if (coefflist.Count == 22)
+                {
+                    int.TryParse(coefflist[21], out serial);
+                }
             }
             else bIsHasCaliInfo = false;
 
@@ -337,6 +347,11 @@ namespace CavwayAssist
             byte[] coeff2 = new byte[48];
             byte[] coeff = new byte[128];
             byte[] cali_info = new byte[16];
+            if (serial != GLOBAL.DeviceSerial) //the serial number in file does not match device serial number, exit upload
+            {
+                MessageBox.Show("Serial number mis-match!");
+                return;
+            }
             if (bIsHasCaliInfo)
             {           
                 SetCaliInfoArray(cali_info);

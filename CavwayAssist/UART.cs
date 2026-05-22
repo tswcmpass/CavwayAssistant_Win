@@ -303,6 +303,14 @@ namespace CavwayAssist
             return true;
         }
 
+        public static int readSerial()
+        {
+            byte[] serialbuff = new byte[4] { 0, 0, 0, 0 };
+            UART.readMemory(0x8008, serialbuff, 4);
+            int serial = serialbuff[0] | (serialbuff[1] << 8);
+            return serial;
+        }
+
         //len: numbers of byte to write at addr
         public static bool writeMemory(int addr, byte[] buffOut, int len)
         {

@@ -25,26 +25,19 @@ namespace CavwayAssist
             disableControls();
         }
 
-        private void readSerial()
-        {
-            byte[] serialbuff = new byte[4] { 0,0,0,0 };
-            UART.readMemory(0x8008, serialbuff, 4);
-            int Serial = serialbuff[0] | (serialbuff[1] << 8);
-            lblSerial.Text = "Serial. " + Serial.ToString().PadLeft(4, '0');
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             if (!UART.isConnected())
             {
                 if (UART.connect())
-                {
-                    userConnected = true;
+                {                  
                     lblPortStatus.Text = "Connected";
                     lblPortStatus.ForeColor = Color.Green;
                     btnConnect.Text = "Disconnect";
                     enableControls();
-                    readSerial();
+                    GLOBAL.DeviceSerial = UART.readSerial();
+                    lblSerial.Text = "Serial. " + GLOBAL.DeviceSerial.ToString().PadLeft(4, '0');
+                    userConnected = true;
                 }
                 else
                 {
