@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Globalization;
 
 
 namespace CavwayAssist
@@ -262,7 +263,7 @@ namespace CavwayAssist
             csv.Write(aM2.z.x.ToString() + "," + aM2.z.y.ToString() + "," + aM2.z.z.ToString());
             if (bIsHasCaliInfo)
             {
-                csv.Write(cali_time.ToString("yyyy-MM-dd HH:mm:ss"));
+                csv.Write(cali_time.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));
                 csv.Write(cali_aver_err.ToString());
                 csv.Write(cali_err_stddev.ToString());
                 csv.Write(cali_max_err.ToString());
@@ -325,7 +326,7 @@ namespace CavwayAssist
             if (coefflist.Count >= 21)
             {
                 bIsHasCaliInfo = true;
-                DateTime.TryParse(coefflist[16], out cali_time);
+                DateTime.TryParseExact(coefflist[16], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out cali_time);
                 float.TryParse(coefflist[17], out cali_aver_err);
                 float.TryParse(coefflist[18], out cali_err_stddev);
                 float.TryParse(coefflist[19], out cali_max_err);

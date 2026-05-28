@@ -275,7 +275,7 @@
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.MaximizeBox = false;
             this.Name = "FrmMain";
-            this.Text = "Cavway Assistant V1.2.1 (May 8th, 2026)";
+            this.Text = "Cavway Assistant V1.2.2 (May 28th, 2026)";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             this.Load += new System.EventHandler(this.FrmMain_Load);
             this.groupBox1.ResumeLayout(false);

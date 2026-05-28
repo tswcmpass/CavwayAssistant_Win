@@ -210,7 +210,7 @@ namespace CavwayAssist
             {
                 int i = curr_idx_rd;
                 ListViewItem lvi = new ListViewItem();
-                lvi.Text = listshot[i].dtShotTime.ToString();
+                lvi.Text = listshot[i].dtShotTime.ToString("yyyy/MM/dd HH:mm:ss");
                 string flg = "";
                 if (listshot[i].isLeg) flg = "leg";
                 else if (listshot[i].isCali) flg = "cali";
@@ -288,7 +288,7 @@ namespace CavwayAssist
             csv.Write(tmpstr);
             for(int i = 0;i < listshot.Count;i++)
             {
-                tmpstr = listshot[i].dtShotTime.ToString() + "," + listData.Items[i].SubItems[1].Text + "," +
+                tmpstr = listshot[i].dtShotTime.ToString("yyyy/MM/dd HH:mm:ss") + "," + listData.Items[i].SubItems[1].Text + "," +
                     listshot[i].distance.ToString("F3") + "," + listshot[i].azimuth.ToString("F2") +"," + listshot[i].inclination.ToString("F2") + "," +
                     listshot[i].absG.ToString("F3") + "," + listshot[i].absM.ToString("F2") + "," + listshot[i].dip.ToString("F2") + ",";
                 for(int j = 0;j < 2; j++)
