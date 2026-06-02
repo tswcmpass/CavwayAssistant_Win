@@ -289,6 +289,11 @@ namespace CavwayAssist
             List<String> coefflist = new List<string>();
             csv.ReadFile(ref coefflist);
             string[] split = coefflist[0].Split(',');
+            if(split.Length > 3)
+            {
+                MessageBox.Show("Wrong coe file format");
+                return;
+            }
             bG1.x = double.Parse(split[0]); bG1.y = double.Parse(split[1]); bG1.z = double.Parse(split[2]);
             split = coefflist[1].Split(',');
             bM1.x = double.Parse(split[0]); bM1.y = double.Parse(split[1]); bM1.z = double.Parse(split[2]);
@@ -350,8 +355,12 @@ namespace CavwayAssist
             byte[] cali_info = new byte[16];
             if (serial != GLOBAL.DeviceSerial) //the serial number in file does not match device serial number, exit upload
             {
-                MessageBox.Show("Serial number mis-match!");
-                return;
+                DialogResult result = MessageBox.Show(
+                    "The serial number in the file does not match the connected device, or no serial number was found in the file.\n\nContinue anyway?",
+                    "Warning",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+                if (result == DialogResult.No) return;
             }
             if (bIsHasCaliInfo)
             {           
